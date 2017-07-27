@@ -1,36 +1,9 @@
-# =============== #
-# Unity generated #
-# =============== #
-Temp/
-Library/
-
-# ===================================== #
-# Visual Studio / MonoDevelop generated #
-# ===================================== #
-ExportedObj/
-obj/
-*.svd
-*.userprefs
-/*.csproj
-*.pidb
-*.suo
-/*.sln
-*.user
-*.unityproj
-*.booproj
-
-# ============ #
-# OS generated #
-# ============ #
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-#=============#
-# Other Stuff #
-#=============#
-
+/build
+/captures
+.externalNativeBuild
