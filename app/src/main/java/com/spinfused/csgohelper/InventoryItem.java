@@ -16,15 +16,12 @@ public class InventoryItem {
     private String itemName;
     private String itemDescription;
     private String itemPrice;
-
-
-
     private String itemIcon;
 
     public static List<InventoryItem> parseJson(JSONObject jsonObject) throws JSONException {
         List<InventoryItem> inventoryItems = new ArrayList<>();
-        if(jsonObject.has("assets")){
-            JSONArray jsonArray = jsonObject.getJSONObject("assets").getJSONObject("descriptions").getJSONArray("inventoryItems");
+        if(jsonObject.has("success")){
+            JSONArray jsonArray = jsonObject.getJSONArray("rgDescriptions");
             for(int i = 0; i < jsonArray.length(); i++){
                 inventoryItems.add(new InventoryItem(jsonArray.getJSONObject(i)));
             }
@@ -34,10 +31,12 @@ public class InventoryItem {
     }
 
     private InventoryItem(JSONObject jsonObject) throws JSONException {
-        if(jsonObject.has("name")) this.setItemName(jsonObject.getString("name"));
-        if(jsonObject.has("displayName")) this.setDisplayName(jsonObject.getString("displayName"));
-        if(jsonObject.has("description")) this.setDescription(jsonObject.getString("description"));
-        if(jsonObject.has("icon")) this.setIcon(jsonObject.getString("icon"));
+        if(jsonObject.has("market_name")) this.setItemName(jsonObject.getString("market_name"));
+        if(jsonObject.has("icon_url_large")) this.setItemIcon(jsonObject.getString("icon_url_large"));
+
+        JSONArray descArray = jsonObject.getJSONArray("descriptions");
+        if(jsonObject.has("descriptions")) this.setItemDescription(descArray.getJSONObject(2).getString("value"));
+
     }
 
     public String getItemName() {
