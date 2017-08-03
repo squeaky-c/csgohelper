@@ -2,21 +2,17 @@ package com.spinfused.csgohelper;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.spinfused.csgohelper.dummy.DummyContent;
+import com.spinfused.csgohelper.dummy.DummyContent.DummyItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,22 +21,25 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
+public class dummyFragment extends Fragment {
 
-public class InventoryItemFragment extends Fragment {
-
+    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 2;
-    private InventoryItemRecyclerViewAdapter.OnClickListener listener;
-    private InventoryItemRecyclerViewAdapter adapter;
-    private JsonController controller;
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    private OnListFragmentInteractionListener mListener;
 
-    public InventoryItemFragment() {
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public dummyFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static InventoryItemFragment newInstance(int columnCount) {
-        InventoryItemFragment fragment = new InventoryItemFragment();
+    public static dummyFragment newInstance(int columnCount) {
+        dummyFragment fragment = new dummyFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -51,12 +50,6 @@ public class InventoryItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
-        adapter = new InventoryItemRecyclerViewAdapter(new ArrayList<InventoryItem>());
-        adapter.setListener(listener);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -65,7 +58,7 @@ public class InventoryItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_inventoryitem_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_dummy_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -76,41 +69,8 @@ public class InventoryItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
+            recyclerView.setAdapter(new MydummyRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
-
-        /*
-        recyclerView = (RecyclerView) recyclerView.findViewById(R.id.list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        final LinearLayoutManager mLayoutManager= new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
-        recyclerView.setLayoutManager(mLayoutManager);
-        */
-
-        controller = new JsonController(
-                new JsonController.OnResponseListener() {
-                    @Override
-                    public void onSuccess(List<InventoryItem> inventory) {
-                        if(inventory.size() > 0) {
-                            Log.d("InventoryItemFragment","Got info from Steam JSON.");
-                            //recyclerView.setVisibility(View.VISIBLE);
-                            //recyclerView.invalidate();
-                            adapter.updateDataSet(inventory);
-                            //recyclerView.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String errorMessage) {
-                        Log.d("InventoryItemFragment","Failed to fetch info from Steam JSON.");
-                    }
-                });
-
-        controller.sendRequest("Spinfusr");
-
-
-
         return view;
     }
 
@@ -118,20 +78,18 @@ public class InventoryItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-        */
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        listener = null;
+        mListener = null;
     }
 
     /**
@@ -146,7 +104,6 @@ public class InventoryItemFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(InventoryItem item);
-
+        void onListFragmentInteraction(DummyItem item);
     }
 }

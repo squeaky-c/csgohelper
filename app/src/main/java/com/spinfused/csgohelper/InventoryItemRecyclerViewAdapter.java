@@ -5,25 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import com.spinfused.csgohelper.InventoryItemFragment.OnListFragmentInteractionListener;
-import com.spinfused.csgohelper.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    public static List<InventoryItem> inventory;
+    public static OnClickListener listener;
 
-    public InventoryItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public InventoryItemRecyclerViewAdapter(List<InventoryItem> inventory) {
+        this.inventory = inventory;
+    }
+
+    public interface OnClickListener {
+        void onNameClick(InventoryItem item);
+        void onIconClick(InventoryItem item);
     }
 
     @Override
@@ -35,43 +35,65 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        InventoryItem item = inventory.get(position);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        holder.displayName.setText(inventory.get(position).itemName);
+        holder.description.setText(inventory.get(position).itemDescription);
+        holder.setIcon(item.getItemIcon());
+
+        if(listener!=null) {
+            holder.bindClickListener(listener, item);
+        }
+    }
+
+    public void setListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void updateDataSet(List<InventoryItem> modelList) {
+        this.inventory.clear();
+        this.inventory.addAll(modelList);
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return inventory.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        private TextView displayName;
+        private TextView description;
+        private NetworkImageView icon;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            this.displayName = (TextView) view.findViewById(R.id.id);
+            this.description = (TextView) view.findViewById(R.id.content);
+            this.icon = (NetworkImageView) view.findViewById(R.id.icon);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+        void setIcon(String iconUrl) {
+            ImageLoader imageLoader = VolleySingleton.getInstance(App.getContext()).getImageLoader();
+            this.icon.setImageUrl(iconUrl, imageLoader);
+        }
+
+        void bindClickListener(final OnClickListener listener, final InventoryItem item){
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onNameClick(item);
+                }
+            });
+
+            icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onIconClick(item);
+                }
+            });
         }
     }
 }
