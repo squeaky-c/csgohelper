@@ -24,8 +24,9 @@ public class InventoryItem {
         List<InventoryItem> inventoryItems = new ArrayList<>();
         Log.d("InventoryItem.java","Made ArrayList");
         //if(jsonObject.has("success")){
-        if(jsonObject.has("game")){
+        if(jsonObject.has("success")){
             Log.d("InventoryItem.java","Success on finding JSON");
+
 
             /*JSONObject rgDescriptionsObject = jsonObject.getJSONObject("rgDescriptions");
 
@@ -38,7 +39,8 @@ public class InventoryItem {
             }
             */
 
-            JSONArray jsonArray = jsonObject.getJSONObject("game").getJSONObject("availableGameStats").getJSONArray("achievements");
+            //JSONArray jsonArray = jsonObject.getJSONObject("game").getJSONObject("availableGameStats").getJSONArray("achievements");
+            JSONArray jsonArray = jsonObject.getJSONArray("descriptions");
             for(int i = 0; i < jsonArray.length(); i++){
                 inventoryItems.add(new InventoryItem(jsonArray.getJSONObject(i)));
             }
@@ -57,9 +59,11 @@ public class InventoryItem {
         if(jsonObject.has("descriptions")) this.setItemDescription(descArray.getJSONObject(2).getString("value"));
         */
 
-        if(jsonObject.has("name")) this.setItemName(jsonObject.getString("displayName"));
-        if(jsonObject.has("description")) this.setItemDescription(jsonObject.getString("description"));
-        if(jsonObject.has("icon")) this.setItemIcon(jsonObject.getString("icon"));
+
+
+        if(jsonObject.has("icon_url")) this.setItemIcon(jsonObject.getString("icon_url"));
+        if(jsonObject.has("type")) this.setItemDescription(jsonObject.getString("type"));
+        if(jsonObject.has("market_hash_name")) this.setItemName(jsonObject.getString("market_hash_name"));
 
     }
 
@@ -69,6 +73,7 @@ public class InventoryItem {
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
+        Log.d("Steam name",this.itemName);
     }
 
     public String getItemDescription() {
@@ -77,6 +82,7 @@ public class InventoryItem {
 
     public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
+        Log.d("Steam desc",this.itemDescription);
     }
 
     public String getItemPrice() {
@@ -92,7 +98,10 @@ public class InventoryItem {
     }
 
     public void setItemIcon(String itemIcon) {
-        this.itemIcon = itemIcon;
+        this.itemIcon = "http://cdn.steamcommunity.com/economy/image/"+itemIcon;
+        Log.d("Steam icon",this.itemIcon);
+
+
     }
 
 

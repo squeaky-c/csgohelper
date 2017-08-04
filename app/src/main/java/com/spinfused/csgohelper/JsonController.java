@@ -22,14 +22,14 @@ public class JsonController {
 
     public void sendRequest(String query){
 
-        query = "730";
+        query = "76561197962695731";
 
         // Request Method
         int method = Request.Method.GET;
 
         // Url with GET parameters
-        //String url = "http://steamcommunity.com/id/"+Uri.encode(query)+"/inventory/json/730/2";
-        String url = "http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=6B6CF7FCEE8B7BD77FCED63EAF2AFFA8&appid=" + Uri.encode(query);
+        String url = "http://steamcommunity.com/inventory/"+Uri.encode(query)+"/730/2?l=english&count=5000";
+        //String url = "http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=6B6CF7FCEE8B7BD77FCED63EAF2AFFA8&appid=" + Uri.encode(query);
 
         // Create new request using JsonRequest
         JsonRequest request = new JsonRequest(method, url, new Response.Listener<List<InventoryItem>>() {

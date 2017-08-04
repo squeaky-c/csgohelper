@@ -1,15 +1,21 @@
 package com.spinfused.csgohelper;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
-import com.spinfused.csgohelper.InventoryItemFragment.OnListFragmentInteractionListener;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemRecyclerViewAdapter.ViewHolder> {
@@ -61,6 +67,22 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
         return inventory.size();
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         private TextView displayName;
@@ -76,8 +98,15 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
         }
 
         void setIcon(String iconUrl) {
+
+            /*
+            Picasso.with(App.getContext()).load(iconUrl).into(this.icon);
+            Log.d("Picasso","Loaded "+iconUrl);
+            this.icon.setVisibility(View.VISIBLE);
+            */
             ImageLoader imageLoader = VolleySingleton.getInstance(App.getContext()).getImageLoader();
             this.icon.setImageUrl(iconUrl, imageLoader);
+
         }
 
         void bindClickListener(final OnClickListener listener, final InventoryItem item){

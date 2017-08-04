@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
             return true;
         }
 
