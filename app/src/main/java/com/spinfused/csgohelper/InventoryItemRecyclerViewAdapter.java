@@ -98,12 +98,6 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
         }
 
         void setIcon(String iconUrl) {
-
-            /*
-            Picasso.with(App.getContext()).load(iconUrl).into(this.icon);
-            Log.d("Picasso","Loaded "+iconUrl);
-            this.icon.setVisibility(View.VISIBLE);
-            */
             ImageLoader imageLoader = VolleySingleton.getInstance(App.getContext()).getImageLoader();
             this.icon.setImageUrl(iconUrl, imageLoader);
 

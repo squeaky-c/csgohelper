@@ -25,18 +25,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-
-    @Override
-    public void onBackPressed() { //Lets us go back in the WebView in our MapsFragment
-        if(MapsFragment.canGoBack()){
-            MapsFragment.goBack();
-        }else{
-            super.onBackPressed();
-        }
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +38,51 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.addOnTabSelectedListener(onTabSelectedListener(mViewPager));
 
         mViewPager.setCurrentItem(1); //Default to MapsFragment
+        mViewPager.setVisibility(View.VISIBLE);
     }
 
 
+    private TabLayout.OnTabSelectedListener onTabSelectedListener(final ViewPager viewPager) {
+
+        return new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        };
+    }
+
+    @Override
+    public void onBackPressed() { //Lets us go back in the WebView in our MapsFragment
+        if(mViewPager.getCurrentItem() == 1 && MapsFragment.canGoBack()) {
+            MapsFragment.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -76,9 +94,13 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Settings including Steam Login coming soon!", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.action_help) {
+            Toast.makeText(this, "Help to be added soon!", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -95,14 +117,17 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    StatisticsFragment tab1 = new StatisticsFragment();
-                    return tab1;
+                    StatisticsFragment statsTab = new StatisticsFragment();
+                    Log.d("Tab","Loaded stats fragment");
+                return statsTab;
                 case 1:
-                    MapsFragment tab2 = new MapsFragment();
-                    return tab2;
+                    MapsFragment mapsTab = new MapsFragment();
+                    Log.d("Tab","Loaded maps fragment");
+                    return mapsTab;
                 case 2:
-                    InventoryItemFragment tab3 = new InventoryItemFragment();
-                    return tab3;
+                    InventoryItemFragment inventoryTab = new InventoryItemFragment();
+                    Log.d("Tab","Loaded item fragment");
+                    return inventoryTab;
                 default:
                     return null;
             }
@@ -110,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
         }
 
@@ -118,11 +142,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Statistics";
+                    return getString(R.string.tab_statistics);
                 case 1:
-                    return "Map Strategies";
+                    return getString(R.string.tab_maps);
                 case 2:
-                    return "Inventory";
+                    return getString(R.string.tab_inventory);
             }
             return null;
         }

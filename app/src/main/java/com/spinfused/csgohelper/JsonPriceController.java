@@ -7,42 +7,38 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-
 import java.util.List;
 
-public class JsonController {
+public class JsonPriceController {
 
     private final int TAG = 100;
-
     private OnResponseListener responseListener;
 
-    public JsonController(OnResponseListener responseListener) {
+    public JsonPriceController(OnResponseListener responseListener) {
         this.responseListener = responseListener;
     }
 
     public void sendRequest(String query){
 
-        query = "76561197962695731";
-
         // Request Method
         int method = Request.Method.GET;
 
         // Url with GET parameters
-        String url = "http://steamcommunity.com/inventory/"+Uri.encode(query)+"/730/2?l=english&count=5000";
-        //String url = "http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=6B6CF7FCEE8B7BD77FCED63EAF2AFFA8&appid=" + Uri.encode(query);
+        String url = "http://steamcommunity.com/market/priceoverview/?country=US&currency=0&appid=730&market_hash_name="+Uri.encode(query);
+
 
         // Create new request using JsonRequest
-        JsonRequest request = new JsonRequest(method, url, new Response.Listener<List<InventoryItem>>() {
+        JsonInventoryPriceRequest request = new JsonInventoryPriceRequest(method, url, new Response.Listener<String>() {
                     @Override
-                    public void onResponse(List<InventoryItem> inventory) {
-                        Log.d("JsonController.java","Success");
-                        responseListener.onSuccess(inventory);
+                    public void onResponse(String itemPrice) {
+                        Log.d("JsonPriceController","Success");
+                        responseListener.onSuccess(itemPrice);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("JsonController.java","Failure");
+                        Log.d("JsonPriceController","Failure");
                         responseListener.onFailure(error.getMessage());
                     }
                 }
@@ -62,7 +58,7 @@ public class JsonController {
     }
 
     public interface OnResponseListener {
-        void onSuccess(List<InventoryItem> inventory);
+        void onSuccess(String itemPrice);
         void onFailure(String errorMessage);
     }
 

@@ -21,6 +21,8 @@ public class MapsFragment extends Fragment {
         mWebView.goBack();
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -29,15 +31,9 @@ public class MapsFragment extends Fragment {
         mWebView = (WebView) v.findViewById(R.id.mapWebView);
         mWebView.loadUrl("http://www.spinfused.com/csgohelper/");
 
-        //mWebView.getSettings().setBuiltInZoomControls(true);
-        //mWebView.getSettings().setSupportZoom(true);
-
-
         // Enable Javascript
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-
-
 
         // Force links and redirects to open in the WebView instead of in a browser
         mWebView.setWebViewClient(new WebViewClient());

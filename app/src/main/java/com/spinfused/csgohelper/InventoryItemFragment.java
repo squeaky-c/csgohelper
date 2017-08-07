@@ -19,25 +19,20 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-
 public class InventoryItemFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 2;
     private InventoryItemRecyclerViewAdapter.OnClickListener listener;
-    private InventoryItemRecyclerViewAdapter adapter;
+    public InventoryItemRecyclerViewAdapter adapter;
     private JsonController controller;
+    View view;
+    RecyclerView recyclerView;
+    private OnListFragmentInteractionListener mListener;
 
-    public InventoryItemFragment() {
+    public InventoryItemFragment() { //Required empty constructor
     }
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static InventoryItemFragment newInstance(int columnCount) {
         InventoryItemFragment fragment = new InventoryItemFragment();
@@ -51,9 +46,6 @@ public class InventoryItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
         adapter = new InventoryItemRecyclerViewAdapter(new ArrayList<InventoryItem>());
         adapter.setListener(listener);
 
@@ -65,39 +57,18 @@ public class InventoryItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_inventoryitem_list, container, false);
+        view = inflater.inflate(R.layout.fragment_inventoryitem_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
-        }
-
-        /*
-        recyclerView = (RecyclerView) recyclerView.findViewById(R.id.list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        final LinearLayoutManager mLayoutManager= new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
-        recyclerView.setLayoutManager(mLayoutManager);
-        */
-
+        Context context = view.getContext();
+        recyclerView = (RecyclerView) view;
         controller = new JsonController(
                 new JsonController.OnResponseListener() {
                     @Override
                     public void onSuccess(List<InventoryItem> inventory) {
                         if(inventory.size() > 0) {
                             Log.d("InventoryItemFragment","Got info from Steam JSON.");
-                            //recyclerView.setVisibility(View.VISIBLE);
-                            //recyclerView.invalidate();
                             adapter.updateDataSet(inventory);
-                            //recyclerView.setAdapter(adapter);
+                            recyclerView.invalidate();
                         }
                     }
 
@@ -106,13 +77,27 @@ public class InventoryItemFragment extends Fragment {
                         Log.d("InventoryItemFragment","Failed to fetch info from Steam JSON.");
                     }
                 });
+        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+
+        recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
+
+
 
         controller.sendRequest("Spinfusr");
+        Log.d("Inventory","Request sent");
 
-
-
+        Log.d("InventoryItemFragment","Am I displaying yet?");
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        controller.sendRequest("spin");
+        recyclerView.invalidate();
+        view.invalidate();
+    }
+
 
 
     @Override
