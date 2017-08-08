@@ -121,7 +121,11 @@ public class InventoryItemFragment extends Fragment {
         //Sushi: 76561198041374792
         //Starworshipper: 76561197987633944
 
-        controller.sendRequest("76561198041374792");
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
+        Log.d("inventory",syncConnPref);
+
+        controller.sendRequest(syncConnPref);
         recyclerView.setVisibility(View.INVISIBLE);
         recyclerView.invalidate();
         view.invalidate();
