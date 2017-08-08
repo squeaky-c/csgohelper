@@ -22,8 +22,6 @@ public class JsonController {
 
     public void sendRequest(String query){
 
-        query = "76561197962695731";
-
         // Request Method
         int method = Request.Method.GET;
 

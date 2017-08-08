@@ -65,7 +65,11 @@ public class InventoryItem {
 
         if(jsonObject.has("icon_url")) this.setItemIcon(jsonObject.getString("icon_url"));
         if(jsonObject.has("descriptions")) this.setItemDescription(jsonObject.getJSONArray("descriptions").getJSONObject(0).getString("value"));
-        if(jsonObject.getString("type").equals("Base Grade Container")) this.setItemDescription("Base Grade Container");
+        if(jsonObject.getString("type").endsWith("Tag") ||
+                jsonObject.getString("type").endsWith("Collectible") ||
+                jsonObject.getString("type").endsWith("Graffiti") ||
+                jsonObject.getString("type").endsWith("Sticker") ||
+                jsonObject.getString("type").endsWith("Container")) this.setItemDescription("Commodity");
         if(jsonObject.has("name")) this.setItemName(jsonObject.getString("name"));
 
 

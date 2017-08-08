@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/inventoryList"
-    android:name="com.spinfused.csgohelper.InventoryItemFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.spinfused.csgohelper.InventoryItemFragment"
-    tools:listitem="@layout/fragment_inventoryitem" />
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/inventoryList"
+        android:name="com.spinfused.csgohelper.InventoryItemFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.spinfused.csgohelper.InventoryItemFragment"
+        tools:listitem="@layout/fragment_inventoryitem" >
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/inventoryHelp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Refresh me!"
+        android:gravity="center"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

@@ -1,8 +1,11 @@
 package com.spinfused.csgohelper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,11 +27,13 @@ public class InventoryItemFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 2;
     private InventoryItemRecyclerViewAdapter.OnClickListener listener;
-    public InventoryItemRecyclerViewAdapter adapter;
+    private InventoryItemRecyclerViewAdapter adapter;
     private JsonController controller;
-    View view;
-    RecyclerView recyclerView;
+    private View view;
+    private RecyclerView recyclerView;
+    private TextView mTextView;
     private OnListFragmentInteractionListener mListener;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public InventoryItemFragment() { //Required empty constructor
     }
@@ -52,39 +57,52 @@ public class InventoryItemFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_inventoryitem_list, container, false);
-
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view;
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        recyclerView = (RecyclerView) view.findViewById(R.id.inventoryList);
+        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        mTextView = (TextView) view.findViewById(R.id.inventoryHelp);
+        mTextView.setText(getString(R.string.tab_inventory_idle));
+
         controller = new JsonController(
                 new JsonController.OnResponseListener() {
                     @Override
                     public void onSuccess(List<InventoryItem> inventory) {
                         if(inventory.size() > 0) {
+                            mTextView.setText(getString(R.string.tab_inventory_loading));
                             Log.d("InventoryItemFragment","Got info from Steam JSON.");
-                            adapter.updateDataSet(inventory);
+                            recyclerView.setVisibility(View.VISIBLE);
                             recyclerView.invalidate();
+                            adapter.updateDataSet(inventory);
+                            recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
+                            mTextView.setVisibility(View.INVISIBLE);
                         }
                     }
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        mTextView.setText(getString(R.string.tab_inventory_failed));
                         Log.d("InventoryItemFragment","Failed to fetch info from Steam JSON.");
                     }
                 });
-        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
 
-        recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
-
-
-
-        controller.sendRequest("Spinfusr");
+        controller.sendRequest("76561197962695731");
         Log.d("Inventory","Request sent");
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+            }
+        });
 
         Log.d("InventoryItemFragment","Am I displaying yet?");
         return view;
@@ -93,9 +111,25 @@ public class InventoryItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        controller.sendRequest("spin");
+        controller.sendRequest("76561197962695731");
+        recyclerView.invalidate();
+        adapter.notifyDataSetChanged();
+        view.invalidate();
+    }
+
+    public void refreshItems() {
+        //Sushi: 76561198041374792
+        //Starworshipper: 76561197987633944
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreference(this);
+        prefs.getString("example_text", "default");
+
+        controller.sendRequest("76561198041374792");
+        recyclerView.setVisibility(View.INVISIBLE);
         recyclerView.invalidate();
         view.invalidate();
+        recyclerView.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
