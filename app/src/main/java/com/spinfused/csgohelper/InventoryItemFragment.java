@@ -70,6 +70,7 @@ public class InventoryItemFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         mTextView = (TextView) view.findViewById(R.id.inventoryHelp);
         mTextView.setText(getString(R.string.tab_inventory_idle));
+        mTextView.setVisibility(View.VISIBLE);
 
         controller = new JsonController(
                 new JsonController.OnResponseListener() {
@@ -88,13 +89,18 @@ public class InventoryItemFragment extends Fragment {
 
                     @Override
                     public void onFailure(String errorMessage) {
+                        mTextView.setVisibility(View.VISIBLE);
                         mTextView.setText(getString(R.string.tab_inventory_failed));
                         Log.d("InventoryItemFragment","Failed to fetch info from Steam JSON.");
                     }
                 });
 
-        controller.sendRequest("76561197962695731");
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
         Log.d("Inventory","Request sent");
+
+        controller.sendRequest(syncConnPref);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -110,7 +116,9 @@ public class InventoryItemFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        controller.sendRequest("76561197962695731");
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
+        controller.sendRequest(syncConnPref);
         recyclerView.invalidate();
         adapter.notifyDataSetChanged();
         view.invalidate();
@@ -119,6 +127,7 @@ public class InventoryItemFragment extends Fragment {
     public void refreshItems() {
         //Sushi: 76561198041374792
         //Starworshipper: 76561197987633944
+        //Mine: 76561197962695731
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
         String syncConnPref = sharedPref.getString("example_text", "");

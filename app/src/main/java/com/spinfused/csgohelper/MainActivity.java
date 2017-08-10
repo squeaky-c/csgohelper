@@ -96,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == R.id.action_login) {
+            Toast.makeText(this, "Steam Login!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
         if (id == R.id.action_settings) {
             Toast.makeText(this, "Settings including Steam Login coming soon!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SettingsActivity.class);

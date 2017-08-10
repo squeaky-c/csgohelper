@@ -10,7 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = ['appAuthRedirectScheme': 'YOURSCHEME']
+        manifestPlaceholders = ['appAuthRedirectScheme': 'com.spinfused.csgohelper']
     }
     buildTypes {
         release {
@@ -50,5 +50,6 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'junit:junit:4.12'
 }
+
 
 
