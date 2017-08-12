@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -20,11 +22,11 @@ import java.util.List;
 
 public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemRecyclerViewAdapter.ViewHolder> {
 
-    public static List<InventoryItem> inventory;
-    public static OnClickListener listener;
+    private static OnClickListener sListener;
+    static List<InventoryItem> sInventory;
 
     public InventoryItemRecyclerViewAdapter(List<InventoryItem> inventory) {
-        this.inventory = inventory;
+        this.sInventory = inventory;
     }
 
     public interface OnClickListener {
@@ -41,65 +43,49 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        InventoryItem item = inventory.get(position);
+        InventoryItem item = sInventory.get(position);
 
-        holder.displayName.setText(inventory.get(position).itemName);
-        holder.description.setText(inventory.get(position).itemDescription);
-        holder.setIcon(item.getItemIcon());
+        holder.mName.setText(item.getName());
+        holder.mDescription.setText(item.getDescription());
+        holder.setIcon(item.getIcon());
 
-        if(listener!=null) {
-            holder.bindClickListener(listener, item);
+        if(sListener!=null) {
+            holder.bindClickListener(sListener, item);
         }
     }
 
     public void setListener(OnClickListener listener) {
-        this.listener = listener;
+        this.sListener = listener;
     }
 
     public void updateDataSet(List<InventoryItem> modelList) {
-        this.inventory.clear();
-        this.inventory.addAll(modelList);
+        this.sInventory.clear();
+        this.sInventory.addAll(modelList);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return inventory.size();
+        return sInventory.size();
     }
-
-    public static Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
-            // Log exception
-            return null;
-        }
-    }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        private TextView displayName;
-        private TextView description;
-        private NetworkImageView icon;
+        private TextView mName;
+        private TextView mDescription;
+        private NetworkImageView mIconUrl;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            this.displayName = (TextView) view.findViewById(R.id.id);
-            this.description = (TextView) view.findViewById(R.id.content);
-            this.icon = (NetworkImageView) view.findViewById(R.id.icon);
+            this.mName = (TextView) view.findViewById(R.id.id);
+            this.mDescription = (TextView) view.findViewById(R.id.content);
+            this.mIconUrl = (NetworkImageView) view.findViewById(R.id.icon);
         }
 
         void setIcon(String iconUrl) {
             ImageLoader imageLoader = VolleySingleton.getInstance(App.getContext()).getImageLoader();
-            this.icon.setImageUrl(iconUrl, imageLoader);
+            this.mIconUrl.setImageUrl(iconUrl, imageLoader);
 
         }
 
@@ -108,10 +94,11 @@ public class InventoryItemRecyclerViewAdapter extends RecyclerView.Adapter<Inven
                 @Override
                 public void onClick(View view) {
                     listener.onNameClick(item);
+                    Toast.makeText(view.getContext(), "Hello", Toast.LENGTH_SHORT).show();
                 }
             });
 
-            icon.setOnClickListener(new View.OnClickListener() {
+            mIconUrl.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     listener.onIconClick(item);

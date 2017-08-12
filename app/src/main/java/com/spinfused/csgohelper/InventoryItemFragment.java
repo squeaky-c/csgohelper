@@ -4,19 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +68,9 @@ public class InventoryItemFragment extends Fragment {
         mTextView.setText(getString(R.string.tab_inventory_idle));
         mTextView.setVisibility(View.VISIBLE);
 
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
+
         controller = new JsonController(
                 new JsonController.OnResponseListener() {
                     @Override
@@ -82,7 +81,7 @@ public class InventoryItemFragment extends Fragment {
                             recyclerView.setVisibility(View.VISIBLE);
                             recyclerView.invalidate();
                             adapter.updateDataSet(inventory);
-                            recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.inventory));
+                            recyclerView.setAdapter(new InventoryItemRecyclerViewAdapter(InventoryItemRecyclerViewAdapter.sInventory));
                             mTextView.setVisibility(View.INVISIBLE);
                         }
                     }
@@ -90,14 +89,18 @@ public class InventoryItemFragment extends Fragment {
                     @Override
                     public void onFailure(String errorMessage) {
                         mTextView.setVisibility(View.VISIBLE);
-                        mTextView.setText(getString(R.string.tab_inventory_failed));
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        if(sharedPref.getString("example_text","").equals("")) {
+                            mTextView.setText(getString(R.string.tab_inventory_idle));
+                        } else {
+                            mTextView.setText(getString(R.string.tab_inventory_failed));
+                        }
                         Log.d("InventoryItemFragment","Failed to fetch info from Steam JSON.");
                     }
                 });
 
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-        String syncConnPref = sharedPref.getString("example_text", "");
+
         Log.d("Inventory","Request sent");
 
         controller.sendRequest(syncConnPref);

@@ -1,18 +1,33 @@
 package com.spinfused.csgohelper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatisticsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private View view;
+    TextView mTextView;
+    private JsonStatisticsController controller;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -33,6 +48,12 @@ public class StatisticsFragment extends Fragment {
         return fragment;
     }
 
+    public static String parseJson(JSONObject jsonObject) throws JSONException {
+        String pName;
+        pName = jsonObject.getJSONObject("response").getJSONArray("players").getJSONObject(0).getString("personaname");
+        return pName;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +67,32 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_statistics, container, false);
+        view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
+
+        mTextView = (TextView) view.findViewById(R.id.statistics_player_name);
+
+        controller = new JsonStatisticsController(
+                new JsonStatisticsController.OnResponseListener() {
+                    @Override
+                    public void onSuccess(String names) {
+                        Log.d("Statistics","Fetched name.");
+                        mTextView.setText(names);
+
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Log.d("Statistics","Failed to fetch name.");
+                        mTextView.setText(getString(R.string.tab_statistics_idle));
+                    }
+                });
+
+        controller.sendRequest(syncConnPref);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -54,6 +100,15 @@ public class StatisticsFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
+        String syncConnPref = sharedPref.getString("example_text", "");
+        controller.sendRequest(syncConnPref);
+        view.invalidate();
     }
 
     @Override

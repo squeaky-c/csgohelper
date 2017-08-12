@@ -1,15 +1,21 @@
 #Final Project - CS:GO Helper
+#Video link below
+https://www.youtube.com/watch?v=UVK-aX5M-z0
+
+by Samuel Flores, 911133384
+
 Main goals:
 
 CS:GO Helper is an app designed to be a speedy companion to Counter-Strike: Global Offensive players.
 
 The main usage is for players to use the app in-between game rounds or matches.
-It provides players with a fast and clean interface to look up strategies on the game's various locales.
+It provides players with a fast and clean interface to look up strategies on the game's various maps.
 
-As a secondary function, it allows a player to look at most of their important statistics.
-The statistics page provides a player with valuable insight into their strengths and weaknesses in the game.
+As a secondary function, it allows a player to look at their inventory.
 
 Secondary goals:
+
+A statistics view.
 
 An in-game 'buy' calculator allows players to visualize their desired loadout's cost.
 This allows someone to quickly assemble a proper loadout given a specific in-game budget.
@@ -17,7 +23,7 @@ This allows someone to quickly assemble a proper loadout given a specific in-gam
 An additional bonus is provided by showing the player their inventory items' ("skins") monetary value.
 
 ##Due 08/25-27:
-Prepare This Readme. 
+Prepare This Readme.
 
 * Decide on the Idea.
 * Fill out the requirements section and the use case section.
@@ -38,9 +44,16 @@ Primary goals:
     3) A list of areas of effect for that map is displayed [RecyclerView]
     4) Player taps the desired area of effect (no more than 5) [GridView?]
     5) Player presented with reliable guides on that area's popular plays
-    
-    
-2) Personal player statistics via Valve's official WebAPI for CS:GO
+
+2) Personal player inventory
+
+    Should be trivial, almost the same as HW2
+    1) We query the API for a player's inventory
+    2) Show the player's CS:GO inventory in a GridView
+
+Secondary goals:
+
+3) Personal player statistics via Valve's official WebAPI for CS:GO
 
     Speed not a concern here, but legibility is
     1) Shows Steam icon
@@ -49,15 +62,7 @@ Primary goals:
     4) Shows headshot rate
     5) Shows statistics for favorite guns
     6) All stats displayed at once for screenshotability
-    
-Secondary goals:
-3) Personal player inventory monetary value (first)
 
-    Should be trivial, almost the same as HW2
-    1) We query the API for a player's inventory
-    2) Show the player's CS:GO inventory in a GridView
-    3) When the player taps their gallery icon, show a detailed fragment for name and price
-    
 4) In-game loadout sketcher (second)
 
     Maybe not as trivial to do via UI
@@ -66,10 +71,10 @@ Secondary goals:
 
 ##App Use cases
 
-1) Helps a player to look up map-specific strategies rapidly 
+1) Helps a player to look up map-specific strategies rapidly
 2) Helps a player to quickly plan appropiate in-game loadouts
 3) Helps a player to study their statistics, highlighting their strengths and weaknesses
-4) Helps a player to understand their inventory's real-world monetary value
+4) Helps a player to show off their inventory
 5) Helps a player to learn the game and more easily enjoy the experience
 
 ##Due 07/25:

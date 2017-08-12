@@ -15,32 +15,26 @@ import java.util.List;
 
 public class InventoryItem {
 
-    public String itemName; //Item name - Basic, ie "M4A1-S | Flashback"
-
-
-
-    public String itemMarketHashName; //Item hash name - Advanced, for price lookup
-    public String itemDescription; //Item description, ie "Exterior: Field-Tested"
-    public String itemPrice; //Median sale price
-    public String itemIcon; //Item icon URL
+    //TODO: Implement item prices
+    private String mName; //Item name - Basic, ie "M4A1-S | Flashback"
+    private String mMarketHashName; //Item hash name - Advanced, for price lookup
+    private String mDescription; //Item description, ie "Exterior: Field-Tested"
+    private String mPrice; //Median sale price
+    private String mIcon; //Item icon URL
 
     public static List<InventoryItem> parseJson(JSONObject jsonObject) throws JSONException {
         List<InventoryItem> inventoryItems = new ArrayList<>();
-        Log.d("JSON: Inventory","Made ArrayList");
-        if(jsonObject.has("success")){
+        if(jsonObject.has("success")) {
             Log.d("JSON: Inventory","Success on finding Inventory JSON");
             JSONArray jsonArray = jsonObject.getJSONArray("descriptions");
             for(int i = 0; i < jsonArray.length(); i++){
                 inventoryItems.add(new InventoryItem(jsonArray.getJSONObject(i)));
             }
-
         }
-
         return inventoryItems;
     }
 
     public static String parseJsonPrice(JSONObject jsonObject) throws JSONException {
-        JSONObject test;
         String itemPrice = "";
         Log.d("JSON: Inventory","Made item price string");
         if(jsonObject.has("success")){
@@ -63,58 +57,58 @@ public class InventoryItem {
             }
         });
 
-        if(jsonObject.has("icon_url")) this.setItemIcon(jsonObject.getString("icon_url"));
-        if(jsonObject.has("descriptions")) this.setItemDescription(jsonObject.getJSONArray("descriptions").getJSONObject(0).getString("value"));
-        if(jsonObject.getString("type").endsWith("Tag") ||
-                jsonObject.getString("type").endsWith("Collectible") ||
-                jsonObject.getString("type").endsWith("Graffiti") ||
-                jsonObject.getString("type").endsWith("Sticker") ||
-                jsonObject.getString("type").endsWith("Container")) this.setItemDescription("Commodity");
-        if(jsonObject.has("name")) this.setItemName(jsonObject.getString("name"));
-
-
-
-
+        if(jsonObject.has("name")) this.setName(jsonObject.getString("name"));
+        if(jsonObject.has("market_hash_name")) this.setMarketHashName(jsonObject.getString("market_hash_name"));
+        if(jsonObject.has("icon_url")) this.setIcon(jsonObject.getString("icon_url"));
+        if( jsonObject.getString("type").endsWith("Tag") ||
+            jsonObject.getString("type").endsWith("Collectible") ||
+            jsonObject.getString("type").endsWith("Graffiti") ||
+            jsonObject.getString("type").endsWith("Sticker") ||
+            jsonObject.getString("type").endsWith("Container")) {
+            this.setDescription("Commodity");
+        } else {
+            this.setDescription(jsonObject.getJSONArray("descriptions").getJSONObject(0).getString("value"));
+        }
     }
 
-    public String getItemName() {
-        return itemName;
+    public String getName() {
+        return mName;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setName(String mName) {
+        this.mName = mName;
     }
 
-    public String getItemDescription() {
-        return itemDescription;
+    public String getMarketHashName() {
+        return mMarketHashName;
     }
 
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
+    public void setMarketHashName(String mMarketHashName) {
+        this.mMarketHashName = mMarketHashName;
     }
 
-    public String getItemPrice() {
-        return itemPrice;
+    public String getDescription() {
+        return mDescription;
     }
 
-    public void setItemPrice(String itemPrice) {
-        this.itemPrice = itemPrice;
+    public void setDescription(String mDescription) {
+        this.mDescription = mDescription;
     }
 
-    public String getItemIcon() {
-        return itemIcon;
+    public String getPrice() {
+        return mPrice;
     }
 
-    public void setItemIcon(String itemIcon) {
-        this.itemIcon = "http://cdn.steamcommunity.com/economy/image/"+itemIcon;
+    public void setPrice(String mPrice) {
+        this.mPrice = mPrice;
     }
 
-    public String getItemMarketHashName() {
-        return itemMarketHashName;
+    public String getIcon() {
+        return mIcon;
     }
 
-    public void setItemMarketHashName(String itemMarketHashName) {
-        this.itemMarketHashName = itemMarketHashName;
+    public void setIcon(String mIcon) {
+        this.mIcon = "http://cdn.steamcommunity.com/economy/image/"+mIcon;
     }
 
 }
