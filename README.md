@@ -1,5 +1,7 @@
 #Final Project - CS:GO Helper
-#Video link below
+
+#Video link
+
 https://www.youtube.com/watch?v=UVK-aX5M-z0
 
 by Samuel Flores, 911133384
