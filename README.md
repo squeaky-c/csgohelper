@@ -1,10 +1,13 @@
-#Final Project - CS:GO Helper
+#CS:GO Helper
+A San Francisco State University final project
 
 #Video link
 
 https://www.youtube.com/watch?v=UVK-aX5M-z0
 
-by Samuel Flores, 911133384
+by Samuel Flores
+
+The following text was written as a class assignment; it is kept here to provide context for the current state of the application.
 
 Main goals:
 
@@ -23,19 +26,6 @@ An in-game 'buy' calculator allows players to visualize their desired loadout's 
 This allows someone to quickly assemble a proper loadout given a specific in-game budget.
 
 An additional bonus is provided by showing the player their inventory items' ("skins") monetary value.
-
-##Due 08/25-27:
-Prepare This Readme.
-
-* Decide on the Idea.
-* Fill out the requirements section and the use case section.
-* Make sure you discuss the idea and milestones with me on the first day, or anytime you decide to pivot your project.
-* You should be able to answer the following every meeting.
-	1. What have I done since our last meeting
-	2. What I plan do to till the next meeting
-	3. Are there any issues that I am stuck on and need help.
-
-##App requirements(listed formally):
 
 Primary goals:
 1) Utility strategies for at least two maps (de_mirage, de_inferno)
@@ -79,55 +69,3 @@ Secondary goals:
 4) Helps a player to show off their inventory
 5) Helps a player to learn the game and more easily enjoy the experience
 
-##Due 07/25:
-* Basic project Setup
-* Setup an apporiate git ignore.
-* setup and test github pushes.
-###Scrum meeting notes:
-
-
-##Due 07/27:
-* Setup UI.
-* Build out all the layout XMLs.
-    * Most completed, not sure what other layouts are required
-###Scrum meeting notes:
-
-
-
-##Due 08/01:
-* UI setup.
-###Scrum meeting notes:
-
-
----
-##Due(minor) 08/03:
-//TODO
-###Scrum meeting notes:
-//TODO
-
----
-##Due 08/08:
-//TODO
-###Scrum meeting notes:
-//TODO
-
----
-##Due(minor) 08/10:
-//TODO
-###Scrum meeting notes:
-//TODO
-
----
-##Demo Day 08/tentative:
-//TODO
-
-##Final Submission 08/tentative:
-//TODO
-
----
-
----
-##Notes
-
-* Your requirements and intended features may change during scrums. Make sure you update this Readme if that happens(I encourage changes in the requirements).
-* Make sure you attend class regularly and show me the completed requirements in class.
